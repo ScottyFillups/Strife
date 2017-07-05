@@ -9,19 +9,24 @@ app.get('/', function(req, res){
 app.use(express.static('public'));
 
 io.on('connection', function(socket) {
-  var name = "unset";
+  var name;
   console.log('a user connected');
   socket.on('disconnect', function() {
+    io.emit('chat message', name + ' has disconnected');
     console.log('a user disconnected');
   });
   socket.on('chat message', function(msg) {
-    io.emit('chat message', name + ': ' + msg);
-    console.log('Message: ' + msg);
+    if (name) {
+      io.emit('chat message', name + ': ' + msg);
+      console.log('Message: ' + msg);
+    }
   });
   socket.on('user connection', function(n) {
-    name = n;
-    io.emit('user connection', n + ' has connected');
-    console.log(n + 'tst');
+    if (!name) {
+      name = n;
+      io.emit('user connection', n + ' has connected');
+      console.log(n + 'tst');
+    }
   });
 });
 
