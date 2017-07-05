@@ -7,13 +7,19 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket) {
+  var name = "unset";
   console.log('a user connected');
   socket.on('disconnect', function() {
     console.log('a user disconnected');
   });
   socket.on('chat message', function(msg) {
-    io.emit('chat message', msg);
+    io.emit('chat message', name + ': ' + msg);
     console.log('Message: ' + msg);
+  });
+  socket.on('user connection', function(n) {
+    name = n;
+    io.emit('user connection', n + ' has connected');
+    console.log(n + 'tst');
   });
 });
 
