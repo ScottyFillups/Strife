@@ -17,6 +17,8 @@ io.on('connection', function(socket) {
   });
 });
 
-http.listen(process.env.PORT || 8080, function(){
+
+var port = process.env.port || 8080;
+http.listen(port, function(){
   console.log('listening on *:8080');
 });
