@@ -1,7 +1,9 @@
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
+var http = require('http');
+var server = http.Server(app);
 var io = require('socket.io')(http);
+var active = false;
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -17,6 +19,7 @@ io.on('connection', function(socket) {
   });
   socket.on('chat message', function(msg) {
     if (name) {
+      active = true;
       io.emit('chat message', name + ': ' + msg);
       console.log('Message: ' + msg);
     }
@@ -30,8 +33,16 @@ io.on('connection', function(socket) {
   });
 });
 
+// nudge the heroku app to prevent sleep
+setInterval(function() {
+  if (active) {
+    http.get("http://strifejs.herokuapp.com");
+    active = false;
+  }
+}, 1000 * 60 * 29);
+
 
 var port = process.env.PORT || 8080;
-http.listen(port, function(){
+server.listen(port, function(){
   console.log('listening!');
 });
