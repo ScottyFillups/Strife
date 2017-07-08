@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.Server(app);
-var io = require('socket.io')(http);
+var io = require('socket.io')(server);
 var active = false;
 
 app.get('/', function(req, res){
@@ -36,7 +36,8 @@ io.on('connection', function(socket) {
 // nudge the heroku app to prevent sleep
 setInterval(function() {
   if (active) {
-    http.get("http://strifejs.herokuapp.com");
+    console.log('Nudge!');
+    http.get('http://strifejs.herokuapp.com');
     active = false;
   }
 }, 1000 * 60 * 29);

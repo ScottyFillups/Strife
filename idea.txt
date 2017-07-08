@@ -1,1 +1,0 @@
-use a hash table to avoid user name duplicates

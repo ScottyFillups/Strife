@@ -2,7 +2,7 @@
   "name": "strife",
   "version": "1.0.0",
   "description": "",
-  "private" : true,
+  "private": true,
   "scripts": {
     "start": "node app.js",
     "test": "nodemon app.js"
