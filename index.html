@@ -1,28 +1,20 @@
 <!doctype html>
-<html>
+<html ng-app="landingPage">
   <head>
-    <title>Socket.IO chat</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Strife</title>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="client.js"></script>
+    <script src="/js/angular.js"></script>
+    <script src="/js/index.js"></script>
   </head>
-  <body>
-    <h1>Strifejs</h1>
-    <h2>A lightweight real-time messaging app built with node</h2>
-    <h3>Made by Scottyfillups | Philip Scott</h3>
-    <div class="container">
-      <form class="user" action="">
-        <input id="u" autocomplete="off" />
-        <button class="userSubmit">Join Room</button>
-      </form>
-    </div>
-    <ul id="messages"></ul>
-    <div class="chat">
-      <form action="">
-        <input id="m" autocomplete="off" />
-        <button class="chatSubmit">Send Message</button>
-      </form>
+  <body ng-controller="UrlGeneratorCtrl">
+    <h1>Strife<sub>JS</sub></h1>
+    <h2>Simple Node chat rooms</h2>
+    <h4>Created by ScottyFillups | Philip Scott</h4>
+    <button id="room-generator" ng-click="generateRoom()">
+      Generate room
+    </button>
+    <div>
+      <a id="room-url" ng-href="{{url}}" ng-bind="url"></a>
     </div>
   </body>
 </html>

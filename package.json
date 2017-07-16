@@ -1,23 +1,15 @@
 {
-  "name": "strife",
+  "name": "cubby",
   "version": "1.0.0",
   "description": "",
-  "private": true,
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "nodemon server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ScottyFillups/Strife.git"
+    "test": "nodemon server.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ScottyFillups/Strife/issues"
-  },
-  "homepage": "https://github.com/ScottyFillups/Strife#readme",
   "dependencies": {
     "express": "^4.15.3",
     "shortid": "^2.2.8",

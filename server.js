@@ -1,49 +1,69 @@
-var express = require('express');
-var app = express();
-var http = require('http');
-var server = http.Server(app);
-var io = require('socket.io')(server);
-var active = false;
+const express = require('express'),
+      app = express(),
+      http = require('http'),
+      server = http.Server(app),
+      io = require('socket.io')(server),
+      shortid = require('shortid');
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
+let active = false,
+    cubbies = {},
+    lobbyNsp = io.of('/lobby'),
+    url;
+
 app.use(express.static('public'));
 
-io.on('connection', function(socket) {
-  var name;
-  console.log('a user connected');
-  socket.on('disconnect', function() {
-    io.emit('chat message', name + ' has disconnected');
-    console.log('a user disconnected');
-  });
-  socket.on('chat message', function(msg) {
-    if (name) {
-      active = true;
-      io.emit('chat message', name + ': ' + msg);
-      console.log('Message: ' + msg);
-    }
-  });
-  socket.on('user connection', function(n) {
-    if (!name) {
-      name = n;
-      io.emit('user connection', n + ' has connected');
-      console.log(n + 'tst');
-    }
+app.get('/', (req, res) => {
+  url = req.protocol + '://' + req.get('host');
+  res.sendFile(__dirname + '/index.html');
+});
+app.get('/r/:cubby', (req, res) => {
+  let cubbyId = req.params.cubby;
+  if (cubbyId in cubbies) {
+    res.sendFile(__dirname + '/cubby.html');
+    joinCubby(cubbyId);
+  } else {
+    res.sendFile(__dirname + '/error.html');
+  }
+});
+
+lobbyNsp.on('connection', (socket) => {
+  console.log('somebody connected in the lobby');
+  socket.on('request room', () => {
+    let cubbyId = shortid.generate();
+    socket.emit('room generated', url + '/r/' + cubbyId);
+    cubbies[cubbyId] = {users: []};
   });
 });
 
-// nudge the heroku app to prevent sleep
-setInterval(function() {
+setInterval( () => {
   if (active) {
-    console.log('Nudge!');
     http.get('http://strifejs.herokuapp.com');
     active = false;
   }
 }, 1000 * 60 * 29);
 
-
-var port = process.env.PORT || 8080;
-server.listen(port, function(){
-  console.log('listening!');
+const port = process.env.PORT || 8080;
+server.listen(port, () => {
+  console.log('listening on port ' + port);
 });
+
+function joinCubby(id) {
+  //avoids redefine and duplicates
+  if (cubbies[id].nspObj === undefined) {
+    let roomNsp = io.of('/' + id);
+    cubbies[id].nspObj = roomNsp;
+    roomNsp.on('connection', (socket) => {
+      console.log('somebody joined a room');
+      socket.on('join room', (data) => {
+        roomNsp.emit('push message', data + ' has joined.');
+        cubbies[id][socket.id] = data;
+      });
+      socket.on('send message', (data) => {
+        roomNsp.emit('push message', data.user + ': ' + data.message);
+      });
+      socket.on('disconnect', (data) => {
+        roomNsp.emit('push message', cubbies[id][socket.id] + ' has left.');
+      });
+    });
+  }
+}
