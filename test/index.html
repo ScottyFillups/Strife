@@ -1,0 +1,20 @@
+<!doctype html>
+<html ng-app="landingPage">
+  <head>
+    <title>Strife</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/angular.js"></script>
+    <script src="/js/index.js"></script>
+  </head>
+  <body ng-controller="UrlGeneratorCtrl">
+    <h1>Strife<sub>JS</sub></h1>
+    <h2>Simple Node chat rooms</h2>
+    <h4>Created by ScottyFillups | Philip Scott</h4>
+    <button id="room-generator" ng-click="generateRoom()">
+      Generate room
+    </button>
+    <div>
+      <a id="room-url" ng-href="{{url}}" ng-bind="url"></a>
+    </div>
+  </body>
+</html>

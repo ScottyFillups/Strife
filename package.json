@@ -4,8 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "node app.js",
-    "test": "nodemon app.js"
+    "start": "node server.js",
+    "test": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ScottyFillups/Strife#readme",
   "dependencies": {
     "express": "^4.15.3",
+    "shortid": "^2.2.8",
     "socket.io": "^2.0.3"
   }
 }

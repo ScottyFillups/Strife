@@ -1,0 +1,27 @@
+<!doctype html>
+<html ng-app="cubby">
+  <head>
+    <title>Cubby</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/angular.js"></script>
+    <script src="/js/cubby.js"></script>
+  </head>
+  <body ng-controller="CubbyCtrl">
+      <div ng-show="!nameSet">
+        <form ng-submit="setDisplayName()">
+          <input type="text" ng-model="displayName" />
+          <input type="submit" value="Join room" />
+        </form>
+        <p ng-bind="errorMessage"></p>
+      </div>
+      <div ng-show="nameSet">
+        <div id="messages">
+        </div>
+        <form ng-submit="sendMessage()">
+          <input type="text" ng-model="message" />
+          <input type="submit" value="Send message" />
+        </form>
+      </div>
+  </body>
+</html>
