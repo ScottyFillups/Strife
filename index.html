@@ -2,19 +2,26 @@
 <html ng-app="landingPage">
   <head>
     <title>Strife</title>
+    <link rel="stylesheet" href="stylesheets/lobby.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/angular.js"></script>
     <script src="/js/index.js"></script>
   </head>
   <body ng-controller="UrlGeneratorCtrl">
-    <h1>Strife<sub>JS</sub></h1>
-    <h2>Simple Node chat rooms</h2>
-    <h4>Created by ScottyFillups | Philip Scott</h4>
-    <button id="room-generator" ng-click="generateRoom()">
-      Generate room
-    </button>
-    <div>
-      <a id="room-url" ng-href="{{url}}" ng-bind="url"></a>
+    <div class="page">
+      <main>
+      <h1 class="logo">Strife<sub>JS</sub></h1>
+      <h2>Chatting made simple</h2>
+      <button id="room-generator" ng-click="generateRoom()">
+        Generate room
+      </button>
+      <div>
+        <a id="room-url" ng-href="{{url}}" ng-bind="url"></a>
+      </div>
+      </main>
+      <footer>
+        <h4>Created by ScottyFillups | Philip Scott</h3>
+      </footer>
     </div>
   </body>
 </html>

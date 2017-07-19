@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300');
+
+h1 {
+  font-weight: bold;
+  font-size: 3em;
+}
+h2, h3, h4, p, button {
+  font-weight: 300;
+}
+h1, h2, h3, h4, p, button {
+  font-family: 'Open-sans', sans-serif;
+}
+sub {
+  background-color: #F7DF1E;
+  padding: 15px 3px 0 15px;
+  margin: 4px;
+  font-size: 60%;
+  color: #000;
+}
+h4 {
+  font-size: 0.8em;
+  margin: 0;
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-transform: uppercase;
+  height: 50px;
+  padding: 5px 0;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+.logo {
+  margin: 0;
+  padding: 50px 0 10px 0;
+}
+
+.page {
+  min-height: 100%;
+  position: relative;
+}
+main {
+  padding-bottom: 60px;
+}
+
+body {
+  background: linear-gradient(45deg, #050505, #333);
+  background-size: 400% 400%;
+  color: #fff;
+  text-align: center;`
+  
+  -webkit-animation: AnimationName 29s ease infinite;
+  -moz-animation: AnimationName 29s ease infinite;
+  -o-animation: AnimationName 29s ease infinite;
+  animation: AnimationName 29s ease infinite;
+
+  position: relative;
+}
+
+@media screen and (min-width: 480px) {
+  body {
+    font-size: 150%;
+  }
+}
+
+button {
+  background-image: none;
+  border: 1px solid #fff;
+  padding: 25px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.8em;
+  background-color: transparent;
+  transition: text-shadow 0.3s ease, box-shadow 0.3s ease;
+}
+button:focus, button:hover {
+  text-shadow: 0 0 15px rgba(255,255,255,0.3);
+  box-shadow: inset 0 0 15px rgba(255,255,255,0.1);
+}
+button:focus {
+  outline: 0;
+}
+
+@-webkit-keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@-moz-keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@-o-keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes AnimationName { 
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
