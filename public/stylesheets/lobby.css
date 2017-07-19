@@ -43,13 +43,63 @@ html, body {
 .page {
   min-height: 100%;
   position: relative;
+  }
+.page:after {
+  content: '';
+  background-image: url('../assets/bg.png');
+  background-repeat: repeat;
+  background-position: center;
+  opacity: 0.4;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
 }
+
+.quote-container {
+  padding: 20px;
+}
+
+#quote, #author {
+  font-size: 0.8em;
+  margin-left: auto;
+  margin-right: auto;
+}
+#quote {
+  margin-top: 80px;
+  font-style: italic;
+}
+
 main {
   padding-bottom: 60px;
 }
 
+#room-generator {
+  margin-bottom: 30px;
+}
+
+#room-url {
+  padding: 5px;
+  border-bottom: 1px dotted #fff;
+  font-size: 0.8em;
+  font-family: 'Open-sans', sans-serif;
+  opacity: 0;
+  text-decoration: none;
+  transition: opacity 0.5s ease;
+}
+#room-url, 
+#room-url:link, 
+#room-url:hover, 
+#room-url:visited,
+#room-url:active {
+  color: #fff;
+}
+
 body {
-  background: linear-gradient(45deg, #050505, #333);
+  background: linear-gradient(45deg, #000, #333);
   background-size: 400% 400%;
   color: #fff;
   text-align: center;`
@@ -79,7 +129,7 @@ button {
   background-color: transparent;
   transition: text-shadow 0.3s ease, box-shadow 0.3s ease;
 }
-button:focus, button:hover {
+button:hover {
   text-shadow: 0 0 15px rgba(255,255,255,0.3);
   box-shadow: inset 0 0 15px rgba(255,255,255,0.1);
 }

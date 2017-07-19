@@ -2,12 +2,14 @@ const express = require('express'),
       app = express(),
       http = require('http'),
       server = http.Server(app),
+      unirest = require('unirest');
       io = require('socket.io')(server),
       shortid = require('shortid');
 
 let active = false,
     cubbies = {},
     lobbyNsp = io.of('/lobby'),
+    dailyQuote,
     url;
 
 app.use(express.static('public'));
@@ -26,8 +28,15 @@ app.get('/r/:cubby', (req, res) => {
   }
 });
 
+getDailyQuote();
+
+setInterval( () => {
+  getDailyQuote();
+}, 1000 * 60 * 60 * 24);
+
 lobbyNsp.on('connection', (socket) => {
   console.log('somebody connected in the lobby');
+  socket.emit('daily quote', dailyQuote);
   socket.on('request room', () => {
     let cubbyId = shortid.generate();
     socket.emit('room generated', url + '/r/' + cubbyId);
@@ -66,4 +75,14 @@ function joinCubby(id) {
       });
     });
   }
+}
+function getDailyQuote() {
+  unirest.get("https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famous")
+    .header("X-Mashape-Key", "1amV8UM1c1msh6zD34kpia7C2MVAp1zsw1AjsnosWjyInNQIHt")
+    .header("Content-Type", "application/x-www-form-urlencoded")
+    .header("Accept", "application/json")
+    .end(function (res) {
+      console.log(res.body);
+      dailyQuote = res.body;
+    });
 }
