@@ -7,7 +7,7 @@ const express = require('express'),
       shortid = require('shortid');
 
 let active = false,
-    cubbies = {},
+    rooms = {},
     lobbyNsp = io.of('/lobby'),
     dailyQuote,
     url;
@@ -18,11 +18,11 @@ app.get('/', (req, res) => {
   url = req.protocol + '://' + req.get('host');
   res.sendFile(__dirname + '/index.html');
 });
-app.get('/r/:cubby', (req, res) => {
-  let cubbyId = req.params.cubby;
-  if (cubbyId in cubbies) {
-    res.sendFile(__dirname + '/cubby.html');
-    joinCubby(cubbyId);
+app.get('/r/:room', (req, res) => {
+  let roomId = req.params.room;
+  if (roomId in rooms) {
+    res.sendFile(__dirname + '/room.html');
+    joinRoom(roomId);
   } else {
     res.sendFile(__dirname + '/error.html');
   }
@@ -38,9 +38,9 @@ lobbyNsp.on('connection', (socket) => {
   console.log('somebody connected in the lobby');
   socket.emit('daily quote', dailyQuote);
   socket.on('request room', () => {
-    let cubbyId = shortid.generate();
-    socket.emit('room generated', url + '/r/' + cubbyId);
-    cubbies[cubbyId] = {users: []};
+    let roomId = shortid.generate();
+    socket.emit('room generated', url + '/r/' + roomId);
+    rooms[roomId] = {users: []};
   });
 });
 
@@ -56,22 +56,29 @@ server.listen(port, () => {
   console.log('listening on port ' + port);
 });
 
-function joinCubby(id) {
+function joinRoom(id) {
   //avoids redefine and duplicates
-  if (cubbies[id].nspObj === undefined) {
+  if (rooms[id].nspObj === undefined) {
     let roomNsp = io.of('/' + id);
-    cubbies[id].nspObj = roomNsp;
+    rooms[id].nspObj = roomNsp;
     roomNsp.on('connection', (socket) => {
       console.log('somebody joined a room');
       socket.on('join room', (data) => {
-        roomNsp.emit('push message', data + ' has joined.');
-        cubbies[id][socket.id] = data;
+        roomNsp.emit('push notification', {
+          user: data,
+          message: ' has joined.',
+          time: new Date()
+        });
       });
       socket.on('send message', (data) => {
-        roomNsp.emit('push message', data.user + ': ' + data.message);
+        roomNsp.emit('push message', data);
       });
       socket.on('disconnect', (data) => {
-        roomNsp.emit('push message', cubbies[id][socket.id] + ' has left.');
+        roomNsp.emit('push notification', {
+          user: rooms[id][socket.id],
+          message: ' has left.',
+          time: new Date()
+        });
       });
     });
   }

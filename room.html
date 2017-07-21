@@ -1,21 +1,21 @@
 <!doctype html>
-<html ng-app="cubby">
+<html ng-app="room">
   <head>
-    <title>Cubby</title>
+    <title>StrifeJS</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/angular.js"></script>
-    <script src="/js/cubby.js"></script>
+    <script src="/js/room.js"></script>
   </head>
-  <body ng-controller="CubbyCtrl">
-      <div ng-show="!nameSet">
+  <body ng-controller="RoomCtrl">
+      <div ng-show="!displayName">
         <form ng-submit="setDisplayName()">
-          <input type="text" ng-model="displayName" />
+          <input type="text" ng-model="nameField" />
           <input type="submit" value="Join room" />
         </form>
         <p ng-bind="errorMessage"></p>
       </div>
-      <div ng-show="nameSet">
+      <div ng-show="displayName">
         <div id="messages">
         </div>
         <form ng-submit="sendMessage()">

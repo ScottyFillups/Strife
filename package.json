@@ -1,10 +1,10 @@
 {
-  "name": "cubby",
+  "name": "strifejs",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "nodemon server.js",
+    "test": "start http:localhost:8080 & nodemon server.js",
     "start": "node server.js"
   },
   "keywords": [],
