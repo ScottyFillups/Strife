@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300');
-
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#messages {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 85%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.msgContainer {
+  height: 100%;
+}
 .avatar {
   width: 60px;
   height: 60px;
@@ -13,6 +27,39 @@
   margin-right: 10px;
   margin-top: 15px;
   vertical-align: top;
+}
+form {
+  padding-top: 30px;
+  text-align: center;
+}
+input[type='submit'] {
+  color: #fff;
+  padding: 10px;
+  text-transform: uppercase;
+  background-image: none;
+  background-color: transparent;
+  border: 1px solid #fff;
+  margin-left: 10px;
+  vertical-align: top;
+}
+input[type='text'] {
+  border: none;
+  font-size: 1em;
+  font-family: 'Open-sans', 'Helvetica', 'Arial', sans-serif;
+  border-bottom: 1px dotted #fff;
+  color: #fff;
+  padding: 10px;
+  background-color: transparent;
+}
+input[type='text'].messageInput {
+  border: 1px solid #fff;
+  font-size: 0.8em;
+}
+input[type='submit'].messageSubmit {
+  cursor: pointer;
+}
+input:focus, textarea:focus {
+  outline: 0;
 }
 .message {
   width: auto;
@@ -44,7 +91,7 @@
   height: 1px;
   top: 50%;
   background-color: #fff;
-  width: 40%;
+  width: 35%;
   opacity: 0.7;
   content: ''
 }
@@ -63,7 +110,7 @@
 
 .messageUser {
   font-weight: bold;
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 body {
   font-family: 'Open-sans', 'Helvetica', 'Arial', sans-serif;

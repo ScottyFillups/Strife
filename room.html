@@ -1,27 +1,27 @@
 <!doctype html>
 <html ng-app="room">
-  <head>
-    <title>StrifeJS</title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/angular.js"></script>
-    <script src="/js/room.js"></script>
-  </head>
-  <body ng-controller="RoomCtrl">
-      <div ng-show="!displayName">
-        <form ng-submit="setDisplayName()">
-          <input type="text" ng-model="nameField" />
-          <input type="submit" value="Join room" />
-        </form>
-        <p ng-bind="errorMessage"></p>
-      </div>
-      <div ng-show="displayName">
-        <div id="messages">
-        </div>
-        <form ng-submit="sendMessage()">
-          <input type="text" ng-model="message" />
-          <input type="submit" value="Send message" />
-        </form>
-      </div>
-  </body>
+<head>
+<title>StrifeJS</title>
+<link rel="stylesheet" href="/stylesheets/style.css" />
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/angular.js"></script>
+<script src="/js/room.js"></script>
+</head>
+<body ng-controller="RoomCtrl">
+<div ng-show="!displayName" class="nameInput">
+  <form ng-submit="setDisplayName()">
+    <input type="text" placeholder="Display name" ng-model="nameField" />
+    <input type="submit" value="Join room" />
+  </form>
+  <p ng-bind="errorMessage"></p>
+</div>
+<div ng-show="displayName" class="msgContainer">
+  <div id="messages">
+  </div>
+  <form ng-submit="sendMessage()">
+    <input type="text" class="messageInput" placeholder="Enter message" size="40" ng-model="message" />
+    <input type="submit" class="messageSubmit" value="send" />
+  </form>
+</div>
+</body>
 </html>
