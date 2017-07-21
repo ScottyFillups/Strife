@@ -35,7 +35,7 @@ angular.module('room', [])
             '</div>' +
           '</div>'
         );
-        angular.element(msgContainer).append(msg);
+        angular.element(msgContainer).prepend(msg);
       });
       socket.on('push notification', function(data) {
         var msg = (
@@ -44,7 +44,7 @@ angular.module('room', [])
             '<p class="notificationDate">' + $filter('date')(data.time, 'short') + '</p>' +
           '</div>'
         );
-        angular.element(msgContainer).append(msg);
+        angular.element(msgContainer).prepend(msg);
       });
     }
   ]);
