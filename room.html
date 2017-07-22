@@ -2,12 +2,14 @@
 <html ng-app="room">
 <head>
 <title>StrifeJS</title>
-<link rel="stylesheet" href="/stylesheets/style.css" />
+<link rel="stylesheet" href="/stylesheets/room.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/angular.js"></script>
 <script src="/js/room.js"></script>
 </head>
 <body ng-controller="RoomCtrl">
+<main>
 <div ng-show="!displayName" class="nameInput">
   <form ng-submit="setDisplayName()">
     <input type="text" placeholder="Display name" ng-model="nameField" />
@@ -18,10 +20,11 @@
 <div ng-show="displayName" class="msgContainer">
   <div id="messages">
   </div>
-  <form ng-submit="sendMessage()">
-    <input type="text" class="messageInput" placeholder="Enter message" size="40" ng-model="message" />
+  <form ng-submit="sendMessage()" class="messageForm">
+    <input type="text" class="messageInput" placeholder="Enter message" ng-model="message" />
     <input type="submit" class="messageSubmit" value="send" />
   </form>
 </div>
+</main>
 </body>
 </html>

@@ -64,6 +64,7 @@ function joinRoom(id) {
     roomNsp.on('connection', (socket) => {
       console.log('somebody joined a room');
       socket.on('join room', (data) => {
+        rooms[id][socket.id] = data;
         roomNsp.emit('push notification', {
           user: data,
           message: ' has joined.',
@@ -79,6 +80,7 @@ function joinRoom(id) {
           message: ' has left.',
           time: new Date()
         });
+        delete rooms[id][socket.id];
       });
     });
   }
