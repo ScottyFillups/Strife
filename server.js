@@ -5,6 +5,8 @@ const express = require('express'),
       unirest = require('unirest');
       io = require('socket.io')(server),
       shortid = require('shortid'),
+      redisClient = require('redis').createClient(),
+      MSG_CACHE_LIMIT = 100,
       validator = require('validator');
 
 let active = false,
@@ -29,6 +31,10 @@ app.get('/r/:room', (req, res) => {
   }
 });
 
+redisClient.on('connect', () => {
+  console.log('redis client connected');
+});
+
 getDailyQuote();
 
 setInterval( () => {
@@ -41,7 +47,10 @@ lobbyNsp.on('connection', (socket) => {
   socket.on('request room', () => {
     let roomId = shortid.generate();
     socket.emit('room generated', url + '/r/' + roomId);
-    rooms[roomId] = {users: []};
+    rooms[roomId] = {
+      users: {},
+      nspObj: undefined
+    };
   });
 });
 
@@ -65,30 +74,45 @@ function joinRoom(id) {
     roomNsp.on('connection', (socket) => {
       console.log('somebody joined a room');
       socket.on('join room', (data) => {
-        rooms[id][socket.id] = {
-          user: validator.escape(data),
-          color: getRandomRGB()
-        };
-        roomNsp.emit('push notification', {
+        let userColor = getRandomRGB();
+        let message = {
+          type: 'notification',
           user: validator.escape(data),
           message: ' has joined.',
+          color: userColor,
           time: new Date()
+        };
+        addToRedis(id, JSON.stringify(message));
+        rooms[id].users[socket.id] = {
+          user: validator.escape(data),
+          color: userColor
+        };
+        redisClient.lrange(id, 0, -1, (err, reply) => {
+          socket.emit('load messages', reply);
+          socket.broadcast.emit('push notification', message);
         });
       });
       socket.on('send message', (data) => {
-        roomNsp.emit('push message', {
-          user: validator.escape(data.user),
-          color: rooms[id][socket.id].color,
-          message: validator.escape(data.message),
+        let message = {
+          type: 'message',
+          user: rooms[id].users[socket.id].user,
+          message: validator.escape(data),
+          color: rooms[id].users[socket.id].color,
           time: new Date()
-        });
+        };
+        addToRedis(id, JSON.stringify(message));
+        roomNsp.emit('push message', message);
       });
       socket.on('disconnect', (data) => {
-        roomNsp.emit('push notification', {
-          user: rooms[id][socket.id],
+        let message = {
+          type: 'notification',
+          user: rooms[id].users[socket.id].user,
           message: ' has left.',
+          color: rooms[id].users[socket.id].color,
           time: new Date()
-        });
+        };
+        addToRedis(id, JSON.stringify(message));
+        roomNsp.emit('push notification', message);
         delete rooms[id][socket.id];
       });
     });
@@ -109,5 +133,17 @@ function rgb() {
 }
 function getRandomRGB() {
   return 'rgb(' + rgb() + ',' + rgb() + ',' + rgb() + ')';
+}
+function addToRedis(id, message) {
+  redisClient.rpush([id, message], (err, reply) => {
+    console.log('Message pushed');
+  });
+  redisClient.llen(id, (err, reply) => {
+    if (reply > MSG_CACHE_LIMIT) {
+      redisClient.lpop(id, (err, reply) => {
+        console.log('Message popped');
+      });
+    }
+  });
 }
 
