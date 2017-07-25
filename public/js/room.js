@@ -1,9 +1,3 @@
-function rgb() {
-  return (Math.floor((Math.random() * 255))).toString();
-}
-function getRandomRGB() {
-  return 'rgb(' + rgb() + ',' + rgb() + ',' + rgb() + ')';
-}
 var app = angular.module('room', []);
 app.value('roomId', window.location.pathname.slice(3));
 app.controller('RoomCtrl', ['$scope', 'roomId', '$filter', function($scope, roomId, $filter) {
@@ -12,7 +6,6 @@ app.controller('RoomCtrl', ['$scope', 'roomId', '$filter', function($scope, room
   $scope.setDisplayName = function() {
     if ($scope.nameField) {
       $scope.displayName = $scope.nameField;
-      $scope.userColor = getRandomRGB();
       socket.emit('join room', $scope.displayName);
     } else {
       $scope.errorMessage = 'Enter a name';
@@ -23,8 +16,6 @@ app.controller('RoomCtrl', ['$scope', 'roomId', '$filter', function($scope, room
       socket.emit('send message', {
         user: $scope.displayName,
         message: $scope.message,
-        time: new Date(),
-        color: $scope.userColor
       });
       $scope.message = '';
     }

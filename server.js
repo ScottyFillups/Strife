@@ -4,7 +4,8 @@ const express = require('express'),
       server = http.Server(app),
       unirest = require('unirest');
       io = require('socket.io')(server),
-      shortid = require('shortid');
+      shortid = require('shortid'),
+      validator = require('validator');
 
 let active = false,
     rooms = {},
@@ -64,15 +65,23 @@ function joinRoom(id) {
     roomNsp.on('connection', (socket) => {
       console.log('somebody joined a room');
       socket.on('join room', (data) => {
-        rooms[id][socket.id] = data;
+        rooms[id][socket.id] = {
+          user: validator.escape(data),
+          color: getRandomRGB()
+        };
         roomNsp.emit('push notification', {
-          user: data,
+          user: validator.escape(data),
           message: ' has joined.',
           time: new Date()
         });
       });
       socket.on('send message', (data) => {
-        roomNsp.emit('push message', data);
+        roomNsp.emit('push message', {
+          user: validator.escape(data.user),
+          color: rooms[id][socket.id].color,
+          message: validator.escape(data.message),
+          time: new Date()
+        });
       });
       socket.on('disconnect', (data) => {
         roomNsp.emit('push notification', {
@@ -95,3 +104,10 @@ function getDailyQuote() {
       dailyQuote = res.body;
     });
 }
+function rgb() {
+  return (Math.floor((Math.random() * 255))).toString();
+}
+function getRandomRGB() {
+  return 'rgb(' + rgb() + ',' + rgb() + ',' + rgb() + ')';
+}
+
