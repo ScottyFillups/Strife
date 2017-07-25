@@ -1,3 +1,6 @@
+const port = process.env.PORT || 8080;
+const redisPort = process.env.REDIS_URL || 6379;
+
 const express = require('express'),
       app = express(),
       http = require('http'),
@@ -5,7 +8,7 @@ const express = require('express'),
       unirest = require('unirest');
       io = require('socket.io')(server),
       shortid = require('shortid'),
-      redisClient = require('redis').createClient(),
+      redisClient = require('redis').createClient(redisPort),
       MSG_CACHE_LIMIT = 100,
       validator = require('validator');
 
@@ -61,7 +64,6 @@ setInterval( () => {
   }
 }, 1000 * 60 * 29);
 
-const port = process.env.PORT || 8080;
 server.listen(port, () => {
   console.log('listening on port ' + port);
 });
@@ -113,7 +115,7 @@ function joinRoom(id) {
         };
         addToRedis(id, JSON.stringify(message));
         roomNsp.emit('push notification', message);
-        delete rooms[id][socket.id];
+        delete rooms[id].users[socket.id];
       });
     });
   }
