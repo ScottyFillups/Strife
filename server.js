@@ -4,10 +4,10 @@ const CACHE_LIMIT = 100;
 
 let http = require('http');
 let express = require('express');
-let unirest = require('unirest');
 let shortid = require('shortid');
 let validator = require('validator');
 let randomPrettyColor = require('randomcolor');
+let quoteMaker = require('./modules/quotemaker')();
 
 let app = express();
 let server = http.Server(app);
@@ -21,7 +21,6 @@ let dailyQuote;
 let url;
 
 io.set('transports', ['websocket']);
-
 app.use(express.static('public'));
 
 app.get('/', function sendLobbyPage(req, res) {
@@ -42,15 +41,9 @@ redisClient.on('connect', () => {
   console.log('redis client connected');
 });
 
-getDailyQuote();
-
-setInterval( () => {
-  getDailyQuote();
-}, 1000 * 60 * 60 * 24);
-
 lobbyNsp.on('connection', (socket) => {
   console.log('somebody connected in the lobby');
-  socket.emit('daily quote', dailyQuote);
+  socket.emit('daily quote', quoteMaker.getQuote());
   socket.on('request room', () => {
     let roomId = shortid.generate();
     socket.emit('room generated', url + '/r/' + roomId);
@@ -133,16 +126,6 @@ function joinRoom(id) {
       });
     });
   }
-}
-function getDailyQuote() {
-  unirest.get("https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famous")
-  .header("X-Mashape-Key", "1amV8UM1c1msh6zD34kpia7C2MVAp1zsw1AjsnosWjyInNQIHt")
-  .header("Content-Type", "application/x-www-form-urlencoded")
-  .header("Accept", "application/json")
-  .end(function (res) {
-    console.log(res.body);
-    dailyQuote = res.body;
-  });
 }
 function addToRedis(id, message) {
   redisClient.rpush([id, message], (err, reply) => {
