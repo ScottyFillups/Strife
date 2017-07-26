@@ -9,7 +9,7 @@ let shortid = require('shortid');
 let validator = require('validator');
 let randomPrettyColor = require('randomcolor');
 let keys = require('./config/keys')(DEPLOY_TYPE);
-let quoteMaker = require('./utility/quotemaker')(keys.mashape);
+let quoteMaker = require('./utility/quotemaker')();
 
 let app = express();
 let server = http.Server(app);
@@ -115,16 +115,18 @@ function joinRoom(id) {
         roomNsp.emit('push message', message);
       });
       socket.on('disconnect', (data) => {
-        let message = {
-          type: 'notification',
-          user: rooms[id].users[socket.id].user,
-          message: ' has left.',
-          color: rooms[id].users[socket.id].color,
-          time: new Date()
-        };
-        addToRedis(id, JSON.stringify(message));
-        roomNsp.emit('push notification', message);
-        delete rooms[id].users[socket.id];
+        if (rooms[id].users[socket.id]) {
+          let message = {
+            type: 'notification',
+            user: rooms[id].users[socket.id].user,
+            message: ' has left.',
+            color: rooms[id].users[socket.id].color,
+            time: new Date()
+          };
+          addToRedis(id, JSON.stringify(message));
+          roomNsp.emit('push notification', message);
+          delete rooms[id].users[socket.id];
+        }
       });
     });
   }
