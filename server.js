@@ -2,21 +2,23 @@ const port = process.env.PORT || 8080;
 const redisPort = process.env.REDIS_URL || 6379;
 
 const express = require('express'),
-      app = express(),
-      http = require('http'),
-      server = http.Server(app),
-      unirest = require('unirest');
-      io = require('socket.io')(server),
-      shortid = require('shortid'),
-      redisClient = require('redis').createClient(redisPort),
-      MSG_CACHE_LIMIT = 100,
-      validator = require('validator');
+app = express(),
+http = require('http'),
+server = http.Server(app),
+unirest = require('unirest');
+io = require('socket.io')(server),
+shortid = require('shortid'),
+redisClient = require('redis').createClient(redisPort),
+MSG_CACHE_LIMIT = 100,
+validator = require('validator');
 
 let active = false,
-    rooms = {},
-    lobbyNsp = io.of('/lobby'),
-    dailyQuote,
-    url;
+rooms = {},
+lobbyNsp = io.of('/lobby'),
+dailyQuote,
+url;
+
+io.set('transports', ['websocket']);
 
 app.use(express.static('public'));
 
@@ -122,13 +124,13 @@ function joinRoom(id) {
 }
 function getDailyQuote() {
   unirest.get("https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famous")
-    .header("X-Mashape-Key", "1amV8UM1c1msh6zD34kpia7C2MVAp1zsw1AjsnosWjyInNQIHt")
-    .header("Content-Type", "application/x-www-form-urlencoded")
-    .header("Accept", "application/json")
-    .end(function (res) {
-      console.log(res.body);
-      dailyQuote = res.body;
-    });
+  .header("X-Mashape-Key", "1amV8UM1c1msh6zD34kpia7C2MVAp1zsw1AjsnosWjyInNQIHt")
+  .header("Content-Type", "application/x-www-form-urlencoded")
+  .header("Accept", "application/json")
+  .end(function (res) {
+    console.log(res.body);
+    dailyQuote = res.body;
+  });
 }
 function rgb() {
   return (Math.floor((Math.random() * 255))).toString();

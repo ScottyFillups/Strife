@@ -1,4 +1,4 @@
-var socket = io('/lobby');
+var socket = io('/lobby', {transports: ['websocket']});
 angular.module('landingPage', [])
   .controller('UrlGeneratorCtrl', ['$scope', function($scope) {
     //ill make a factory later
