@@ -1,32 +1,34 @@
-const port = process.env.PORT || 8080;
-const redisPort = process.env.REDIS_URL || 6379;
+const WEBSERVER_PORT = process.env.PORT || 8080;
+const REDIS_PORT = process.env.REDIS_URL || 6379;
+const CACHE_LIMIT = 100;
 
-const express = require('express'),
-app = express(),
-http = require('http'),
-server = http.Server(app),
-unirest = require('unirest');
-io = require('socket.io')(server),
-shortid = require('shortid'),
-redisClient = require('redis').createClient(redisPort),
-MSG_CACHE_LIMIT = 100,
-validator = require('validator');
+let http = require('http');
+let express = require('express');
+let unirest = require('unirest');
+let shortid = require('shortid');
+let validator = require('validator');
+let randomPrettyColor = require('randomcolor');
 
-let active = false,
-rooms = {},
-lobbyNsp = io.of('/lobby'),
-dailyQuote,
-url;
+let app = express();
+let server = http.Server(app);
+let io = require('socket.io')(server);
+let redisClient = require('redis').createClient(REDIS_PORT);
+
+let active = false;
+let rooms = {};
+let lobbyNsp = io.of('/lobby');
+let dailyQuote;
+let url;
 
 io.set('transports', ['websocket']);
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
+app.get('/', function sendLobbyPage(req, res) {
   url = req.protocol + '://' + req.get('host');
   res.sendFile(__dirname + '/index.html');
 });
-app.get('/r/:room', (req, res) => {
+app.get('/r/:room', function sendRoomPage(req, res) {
   let roomId = req.params.room;
   if (roomId in rooms) {
     res.sendFile(__dirname + '/room.html');
@@ -66,9 +68,19 @@ setInterval( () => {
   }
 }, 1000 * 60 * 29);
 
-server.listen(port, () => {
-  console.log('listening on port ' + port);
+server.listen(WEBSERVER_PORT, () => {
+  console.log('listening on port ' + WEBSERVER_PORT);
 });
+
+//make a room builder and a message builder
+//look at the builder design pattern
+
+//room builder takes id in constructor, creates a room instance
+//maybe just room manager, with a build function? no room builder
+//
+//
+//room manager has a room builder
+//room builder has a message builder
 
 function joinRoom(id) {
   //avoids redefine and duplicates
@@ -78,7 +90,7 @@ function joinRoom(id) {
     roomNsp.on('connection', (socket) => {
       console.log('somebody joined a room');
       socket.on('join room', (data) => {
-        let userColor = getRandomRGB();
+        let userColor = randomPrettyColor();
         let message = {
           type: 'notification',
           user: validator.escape(data),
@@ -132,18 +144,12 @@ function getDailyQuote() {
     dailyQuote = res.body;
   });
 }
-function rgb() {
-  return (Math.floor((Math.random() * 255))).toString();
-}
-function getRandomRGB() {
-  return 'rgb(' + rgb() + ',' + rgb() + ',' + rgb() + ')';
-}
 function addToRedis(id, message) {
   redisClient.rpush([id, message], (err, reply) => {
     console.log('Message pushed');
   });
   redisClient.llen(id, (err, reply) => {
-    if (reply > MSG_CACHE_LIMIT) {
+    if (reply > CACHE_LIMIT) {
       redisClient.lpop(id, (err, reply) => {
         console.log('Message popped');
       });
