@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "start http:localhost:8080 & nodemon server.js",
-    "start": "node server.js"
+    "start": "nf start"
   },
   "keywords": [],
   "author": "",
