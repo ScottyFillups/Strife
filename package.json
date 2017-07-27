@@ -5,14 +5,13 @@
   "main": "server.js",
   "scripts": {
     "test": "start http:localhost:8080 & nodemon server.js",
-    "start": "nf start"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.3",
-    "foreman": "^2.0.0",
     "randomcolor": "^0.5.3",
     "redis": "^2.7.1",
     "shortid": "^2.2.8",
