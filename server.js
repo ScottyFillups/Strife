@@ -1,6 +1,7 @@
 const DEPLOY_TYPE = 'testing';
 const WEBSERVER_PORT = process.env.PORT || 8080;
 const REDIS_PORT = process.env.REDIS_URL || 6379;
+const QUOTE_KEY = process.env.QUOTE_KEY_PROD;
 const CACHE_LIMIT = 100;
 
 let http = require('http');
@@ -8,8 +9,7 @@ let express = require('express');
 let shortid = require('shortid');
 let validator = require('validator');
 let randomPrettyColor = require('randomcolor');
-let keys = require('./config/keys')(DEPLOY_TYPE);
-let quoteMaker = require('./utility/quotemaker')();
+let quoteMaker = require('./utility/quotemaker')(QUOTE_KEY);
 
 let app = express();
 let server = http.Server(app);
