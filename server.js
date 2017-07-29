@@ -1,7 +1,6 @@
-const DEPLOY_TYPE = 'testing';
 const WEBSERVER_PORT = process.env.PORT || 8080;
 const QUOTE_KEY = process.env.QUOTE_KEY_PROD;
-
+console.log('Quote key: ' + QUOTE_KEY);
 let http = require('http');
 let express = require('express');
 let shortid = require('shortid');
