@@ -6,16 +6,14 @@ const DEFAULT_QUOTE = {
 };
 let unirest = require('unirest');
 
-function quoteMaker(key, options) {
-  let module = {};
-  let quote;
-
+function QuoteMaker(key, options) {
   options = options || {};
   let refreshTime = options.timeout || DAY_TIMEOUT;
   let quoteType = options.type || 'famous';
   let quoteCount = options.count || '1';
-
   let url = `https://andruxnet-random-famous-quotes.p.mashape.com/?cat=${quoteType}&count=${quoteCount.toString()}`;
+
+  this._quote;
 
   (function genQuote() {
     unirest.get(url)
@@ -23,19 +21,18 @@ function quoteMaker(key, options) {
       .header('Content-Type', 'application/x-www-form-urlencoded')
       .header('Accept', 'application/json')
       .end(function (res) {
-          if (res.body.quote) {
-            quote = res.body;
-          }
+        if (res.body.quote) {
+          this._quote = res.body;
+        }
       });
     setTimeout(genQuote, refreshTime);
   })();
-
-  module.getQuote = function() {
-    quote = quote || DEFAULT_QUOTE;
-    return quote;
+}
+QuoteMaker.prototype = {
+  getQuote: function() {
+    this._quote = this._quote || DEFAULT_QUOTE;
+    return this._quote;
   }
-
-  return module;
 }
 
-module.exports = quoteMaker;
+module.exports = QuoteMaker;

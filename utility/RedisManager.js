@@ -1,5 +1,8 @@
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
 
+console.log(process.env.REDIS_PORT);
+
+
 let redis = require('redis');
 
 function RedisQueue(client, size) {

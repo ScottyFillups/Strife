@@ -1,16 +1,19 @@
 const DEPLOY_TYPE = 'testing';
 const WEBSERVER_PORT = process.env.PORT || 8080;
+const REDIS_PORT = process.env.REDIS_PORT;
 const QUOTE_KEY = process.env.QUOTE_KEY_PROD;
+
+console.log(REDIS_PORT);
 
 let http = require('http');
 let express = require('express');
 let shortid = require('shortid');
-let quoteMaker = require('./utility/quotemaker')(QUOTE_KEY);
 
 let app = express();
 let server = http.Server(app);
 let io = require('socket.io')(server);
 let appManager = new (require('./utility/AppManager'))(io);
+let quoteMaker = new (require('./utility/QuoteMaker'))(QUOTE_KEY);
 
 let active = false;
 let lobbyNsp = io.of('/lobby');
@@ -34,7 +37,6 @@ app.get('/r/:room', function sendRoomPage(req, res) {
 
 lobbyNsp.on('connection', (socket) => {
   console.log('somebody connected in the lobby');
-  console.log(quoteMaker.getQuote());
   socket.emit('daily quote', quoteMaker.getQuote());
   socket.on('request room', () => {
     let address = shortid.generate();
