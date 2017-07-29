@@ -1,4 +1,4 @@
-const REDIS_PORT = process.env.REDIS_PORT || 6379;
+const REDIS_PORT = process.env.REDIS_URL || 6379;
 
 console.log(process.env.REDIS_PORT);
 

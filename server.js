@@ -1,9 +1,6 @@
 const DEPLOY_TYPE = 'testing';
 const WEBSERVER_PORT = process.env.PORT || 8080;
-const REDIS_PORT = process.env.REDIS_PORT;
 const QUOTE_KEY = process.env.QUOTE_KEY_PROD;
-
-console.log(REDIS_PORT);
 
 let http = require('http');
 let express = require('express');
