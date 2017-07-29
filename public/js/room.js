@@ -50,10 +50,10 @@ app.controller('RoomCtrl', ['$scope', 'roomId', '$filter', function($scope, room
 function postMessage(data, $filter) {
   return (
     '<div class="post">' + 
-    '<div class="avatar" style="background-color: ' + data.color + '">' + data.user.charAt(0) + '</div>' + 
+    '<div class="avatar" style="background-color: ' + data.color + '">' + data.username.charAt(0) + '</div>' + 
     '<div class="message">' + 
     '<p>' + 
-    '<span class="messageUser">' + data.user + '</span> ' + 
+    '<span class="messageUser">' + data.username + '</span> ' + 
     '<span class="messageDate">' + $filter('date')(data.time, 'short') + '</span>' +
     '</p>' +
     '<p class="messageContent">' + data.message + '</p>' + 
@@ -64,7 +64,7 @@ function postMessage(data, $filter) {
 function postNotification(data, $filter) {
   return (
     '<div class="notification">' + 
-    '<p class="notificationMessage">' + '<span style="color:' + data.color + '">' + data.user + '</span> ' + data.message + '</p>' +
+    '<p class="notificationMessage">' + '<span style="color:' + data.color + '">' + data.username + '</span> ' + data.message + '</p>' +
     '<p class="notificationDate">' + $filter('date')(data.time, 'short') + '</p>' +
     '</div>'
   );

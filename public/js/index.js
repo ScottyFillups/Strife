@@ -17,11 +17,6 @@ angular.module('landingPage', [])
       angular.element(linkDom).css('opacity', 1);
     });
     socket.on('daily quote', function(data) {
-      if (!data) {
-        data = {};
-        data.quote = 'IT\'S TIME TO STOP';
-        data.author = 'Filthy Frank';
-      }
       angular.element(quoteDom).html(data.quote);
       angular.element(authorDom).html('&mdash; ' + data.author);
     });

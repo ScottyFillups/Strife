@@ -23,9 +23,9 @@ function quoteMaker(key, options) {
       .header('Content-Type', 'application/x-www-form-urlencoded')
       .header('Accept', 'application/json')
       .end(function (res) {
-        if (!res.body.message) {
-          quote = res.body;
-        }
+          if (res.body.quote) {
+            quote = res.body;
+          }
       });
     setTimeout(genQuote, refreshTime);
   })();
