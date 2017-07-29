@@ -12,15 +12,16 @@ function QuoteMaker(key, options) {
   let quoteType = options.type || 'famous';
   let quoteCount = options.count || '1';
   let url = `https://andruxnet-random-famous-quotes.p.mashape.com/?cat=${quoteType}&count=${quoteCount.toString()}`;
+  let genQuote;
 
   this._quote;
 
-  (function genQuote() {
+  (genQuote = () => {
     unirest.get(url)
       .header('X-Mashape-Key', key)
       .header('Content-Type', 'application/x-www-form-urlencoded')
       .header('Accept', 'application/json')
-      .end(function (res) {
+      .end((res) => {
         if (res.body.quote) {
           this._quote = res.body;
         }
