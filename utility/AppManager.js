@@ -1,4 +1,5 @@
-let RoomManager = require('./RoomManager');
+const RoomManager = require('./RoomManager');
+const redisManager = new (require('./RedisManager'))();
 
 function AppManager(io, options) {
   options = options || {};
@@ -9,7 +10,8 @@ function AppManager(io, options) {
 AppManager.prototype = {
   genRoom: function(address) {
     let room = this._io.of('/' + address);
-    this._rooms[address] = new RoomManager(room, address);
+    let queue = redisManager.getQueue(this._cacheSize);
+    this._rooms[address] = new RoomManager(room, address, queue);
   },
   roomExists: function(address) {
     return this._rooms[address] !== undefined;

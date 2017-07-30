@@ -1,17 +1,16 @@
-let randomPrettyColor = require('randomcolor');
-let validator = require('validator');
-let postManager = new (require('./PostManager'))();
-let redisManager = new (require('./RedisManager'))();
-let UserManager = require('./UserManager');
+const randomPrettyColor = require('randomcolor');
+const validator = require('validator');
+const postManager = new (require('./PostManager'))();
+const UserManager = require('./UserManager');
 
-function RoomManager(room, address, options) {
+function RoomManager(room, address, queue, options) {
   options = options || {};
   let cacheSize = options.msgCacheLimit || 100;
 
   this._room = room;
   this._address = address;
   this._userStore = new UserManager(validator);
-  this._redisQueue = redisManager.getQueue(cacheSize);
+  this._redisQueue = queue;
 
   this._room.on('connection', (socket) => {
     socket.on('join room', (data) => {

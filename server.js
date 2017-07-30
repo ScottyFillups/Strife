@@ -11,7 +11,7 @@ let app = express();
 let server = http.Server(app);
 let io = require('socket.io')(server);
 let appManager = new (require('./utility/AppManager'))(io);
-let quoteMaker = new (require('./utility/QuoteMaker'))(QUOTE_KEY);
+let quoteMaker = new (require('./utility/QuoteMaker'))();
 
 let active = false;
 let lobbyNsp = io.of('/lobby');
