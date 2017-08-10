@@ -1,5 +1,5 @@
 var app = angular.module('room', []);
-app.value('roomId', window.location.pathname.slice(3));
+app.value('roomId', window.location.pathname.slice(1)); // need to remove the /
 app.controller('RoomCtrl', ['$scope', 'roomId', '$filter', function($scope, roomId, $filter) {
   var msgContainer = document.getElementById('messages'),
   socket = io('/' + roomId, {transports: ['websocket']});
