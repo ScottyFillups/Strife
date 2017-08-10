@@ -4,6 +4,7 @@
     <title>Strife</title>
     <link rel="stylesheet" href="stylesheets/index.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/angular.js"></script>
     <script src="/js/index.js"></script>
@@ -13,7 +14,10 @@
       <main>
       <h1 class="logo">Strife<sub>JS</sub></h1>
       <h2>Chatting made simple</h2>
-      <button id="room-generator" ng-click="generateRoom()">
+      <button id="room-generator" 
+              class="g-recaptcha"
+              data-sitekey="6LfGXiwUAAAAAMdGjb9LA6VFTLgb_K6Rcq9K-IGI"
+              data-callback="login">
         Generate room
       </button>
       <div>
