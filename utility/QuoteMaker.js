@@ -22,7 +22,7 @@ function QuoteMaker(key, options) {
       .header('Content-Type', 'application/x-www-form-urlencoded')
       .header('Accept', 'application/json')
       .end((res) => {
-        if (res.body.quote) {
+        if (res.body && res.body.quote) {
           this._quote = res.body;
         }
       });
