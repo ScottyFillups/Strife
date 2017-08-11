@@ -18,7 +18,7 @@ sub {
   color: #000;
 }
 h2 {font-size: 1.2em}
-h3 {font-size: 0.6em}
+h3 {font-size: 0.625em}
 
 html, body {
   padding: 0;
@@ -27,11 +27,11 @@ html, body {
 }
 .logo {
   margin: 0;
-  padding: 30px 0 10px 0;
+  padding: 40px 0 10px 0;
 }
 .desc {
   line-height: 160%;
-  margin: 60px 0 30px 0;
+  margin: 45px 0 30px 0;
 }
 
 .page {
@@ -57,7 +57,9 @@ html, body {
 }
 .quote-container {
   padding: 20px;
-  margin-top: 30px;
+  margin-top: 20px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 #quote, #author {
@@ -76,24 +78,6 @@ main {
 #room-generator {
   margin-bottom: 30px;
 }
-
-#room-url {
-  padding: 5px;
-  border-bottom: 1px dotted #fff;
-  font-size: 0.8em;
-  font-family: 'Open-sans', sans-serif;
-  opacity: 0;
-  text-decoration: none;
-  transition: opacity 0.5s ease;
-}
-#room-url, 
-#room-url:link, 
-#room-url:hover, 
-#room-url:visited,
-#room-url:active {
-  color: #fff;
-}
-
 body {
   background: linear-gradient(45deg, #000, #333);
   background-size: 400% 400%;

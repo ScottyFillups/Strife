@@ -18,7 +18,6 @@ let io = require('socket.io')(server);
 let appManager = new (require('./utility/AppManager'))(io);
 let quoteMaker = new (require('./utility/QuoteMaker'))(QUOTE_KEY);
 
-let active = false;
 let lobbyNsp = io.of('/lobby');
 let url;
 
@@ -45,7 +44,7 @@ app.get('/:room', function sendRoomPage(req, res) {
 function recaptchaSuccess(req, res) {
   let address = shortid.generate();
   res.send(url + '/' + address);
-  appManager.genRoom(address);
+  appManager.genRoom(url, address);
 }
 function recaptchaFail(req, res) {
   res.send('There\'s an error with the ReCaptcha, sorry :c');
@@ -55,13 +54,6 @@ lobbyNsp.on('connection', (socket) => {
   console.log('somebody connected in the lobby');
   socket.emit('daily quote', quoteMaker.getQuote());
 });
-
-setInterval( () => {
-  if (active) {
-    http.get('http://strifejs.herokuapp.com');
-    active = false;
-  }
-}, 1000 * 60 * 29);
 
 server.listen(WEBSERVER_PORT, () => {
   console.log('listening on port ' + WEBSERVER_PORT);

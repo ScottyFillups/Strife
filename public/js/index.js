@@ -7,20 +7,18 @@ angular.module('landingPage', [])
     var linkDom = document.getElementById('room-url');
 
     $scope.login = function(token) {
-      console.log(token);
       $http({
         method: 'POST',
         url: '/recaptcha',
         data: token,
         headers: {'Content-Type': 'text/plain'}
       }).then(function(res) {
-        console.log(res.data);
         $scope.$applyAsync(function() {
-          $scope.url = res.data;
+          $window.location.replace(res.data);
         });
         angular.element(linkDom).css('opacity', 1);
       }, function(err) {
-        alert(err);
+        console.log(err);
       });
     };
     $window.login = $scope.login;

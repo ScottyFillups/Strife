@@ -2,11 +2,13 @@ const randomPrettyColor = require('randomcolor');
 const validator = require('validator');
 const postManager = new (require('./PostManager'))();
 const UserManager = require('./UserManager');
+const herokuPinger = require('heroku-pinger');
 
-function RoomManager(room, address, queue, options) {
+function RoomManager(room, url, address, queue, options) {
   options = options || {};
   let cacheSize = options.msgCacheLimit || 100;
 
+  this._pinger = herokuPinger(url);
   this._room = room;
   this._address = address;
   this._userStore = new UserManager(validator);
@@ -40,6 +42,7 @@ RoomManager.prototype = {
     let post = postManager.buildMessage(user, message);
     this._redisQueue.push(this._address, post);
     this._room.emit('push message', post);
+    this._pinger.schedulePing();
   },
   _userLeaveHandler: function(socket) {
     let user = this._userStore.getUser(socket);

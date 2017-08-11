@@ -8,10 +8,10 @@ function AppManager(io, options) {
   this._cacheSize = options.msgCacheLimit || 100;
 }
 AppManager.prototype = {
-  genRoom: function(address) {
+  genRoom: function(url, address) {
     let room = this._io.of('/' + address);
     let queue = redisManager.getQueue(this._cacheSize);
-    this._rooms[address] = new RoomManager(room, address, queue);
+    this._rooms[address] = new RoomManager(room, url, address, queue);
   },
   roomExists: function(address) {
     return this._rooms[address] !== undefined;
