@@ -4,6 +4,7 @@ let express = require('express');
 let shortid = require('shortid');
 let optional = require('optional');
 let bodyParser = require('body-parser');
+let recaptcha = require('invisible-recaptcha');
 let mashapeKeys = optional('./config/mashapeKeys');
 let recaptchaKeys = optional('./config/recaptchaKeys');
 
@@ -25,7 +26,8 @@ io.set('transports', ['websocket']);
 app.use(express.static('public'));
 app.use(bodyParser.text());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
+recaptcha(app, RECAPTCHA_KEY, recaptchaSuccess, recaptchaFail);
 
 app.get('/', function sendLobbyPage(req, res) {
   url = req.protocol + '://' + req.get('host');
@@ -40,29 +42,18 @@ app.get('/:room', function sendRoomPage(req, res) {
   }
 });
 
-app.post('/recaptcha', function validateRecaptcha(req, res) {
-  console.log('Post sent to Google');
-  console.log(RECAPTCHA_KEY);
-  console.log(req.body);
-  recaptchaURL = 'https://www.google.com/recaptcha/api/siteverify?secret=' + RECAPTCHA_KEY + '&response=' + req.body + '&remoteip=' + req.connection.remoteAddress;
-  request(recaptchaURL, function handleGoogleReply(err, googleRes, body) {
-    console.log('Post received from Google');
-    if (JSON.parse(body).success) {
-      let address = shortid.generate();
-      res.send(url + '/' + address);
-      appManager.genRoom(address);
-    } else {
-      res.send('There\'s an error with the ReCaptcha, sorry :c');
-    }
-  });
-});
-
-
+function recaptchaSuccess(req, res) {
+  let address = shortid.generate();
+  res.send(url + '/' + address);
+  appManager.genRoom(address);
+}
+function recaptchaFail(req, res) {
+  res.send('There\'s an error with the ReCaptcha, sorry :c');
+}
 
 lobbyNsp.on('connection', (socket) => {
   console.log('somebody connected in the lobby');
   socket.emit('daily quote', quoteMaker.getQuote());
-
 });
 
 setInterval( () => {

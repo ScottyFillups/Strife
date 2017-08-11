@@ -12,10 +12,11 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.15.3",
+    "express": "^4.15.4",
+    "invisible-recaptcha": "^1.0.3",
     "optional": "^0.1.4",
     "randomcolor": "^0.5.3",
-    "redis": "^2.7.1",
+    "redis": "^2.8.0",
     "request": "^2.81.0",
     "shortid": "^2.2.8",
     "socket.io": "^2.0.3",
