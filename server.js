@@ -4,7 +4,7 @@ let express = require('express');
 let shortid = require('shortid');
 let optional = require('optional');
 let bodyParser = require('body-parser');
-let recaptcha = require('invisible-recaptcha');
+let recaptchaFactory = require('invisible-recaptcha');
 let mashapeKeys = optional('./config/mashapeKeys');
 let recaptchaKeys = optional('./config/recaptchaKeys');
 
@@ -18,33 +18,25 @@ let io = require('socket.io')(server);
 let appManager = new (require('./utility/AppManager'))(io);
 let quoteMaker = new (require('./utility/QuoteMaker'))(QUOTE_KEY);
 
+let recaptchaRouter = recaptchaFactory(RECAPTCHA_KEY, recaptchaSuccess, recaptchaFail);
+let lobby = require('./routes/lobby');
+let room = require('./routes/room')(appManager);
+
 let lobbyNsp = io.of('/lobby');
-let url;
 
 io.set('transports', ['websocket']);
 app.use(express.static('public'));
 app.use(bodyParser.text());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-recaptcha(app, RECAPTCHA_KEY, recaptchaSuccess, recaptchaFail);
-
-app.get('/', function sendLobbyPage(req, res) {
-  url = req.protocol + '://' + req.get('host');
-  res.sendFile(__dirname + '/index.html');
-});
-app.get('/:room', function sendRoomPage(req, res) {
-  let address = req.params.room;
-  if (appManager.roomExists(address)) {
-    res.sendFile(__dirname + '/room.html');
-  } else {
-    res.sendFile(__dirname + '/error.html');
-  }
-});
+app.use('/recaptcha', recaptchaRouter);
+app.use('/', lobby);
+app.use('/', room);
 
 function recaptchaSuccess(req, res) {
   let address = shortid.generate();
-  res.send(url + '/' + address);
-  appManager.genRoom(url, address);
+  appManager.genRoom(address);
+  res.send(address);
 }
 function recaptchaFail(req, res) {
   res.send('There\'s an error with the ReCaptcha, sorry :c');

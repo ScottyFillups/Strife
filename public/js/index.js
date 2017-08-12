@@ -14,9 +14,8 @@ angular.module('landingPage', [])
         headers: {'Content-Type': 'text/plain'}
       }).then(function(res) {
         $scope.$applyAsync(function() {
-          $window.location.replace(res.data);
+          $window.location.replace(window.location.href + res.data);
         });
-        angular.element(linkDom).css('opacity', 1);
       }, function(err) {
         console.log(err);
       });

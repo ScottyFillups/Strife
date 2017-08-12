@@ -1,14 +1,15 @@
+const HEROKU_URL = 'https://strifejs.herokuapp.com';
 const randomPrettyColor = require('randomcolor');
 const validator = require('validator');
 const postManager = new (require('./PostManager'))();
 const UserManager = require('./UserManager');
 const herokuPinger = require('heroku-pinger');
 
-function RoomManager(room, url, address, queue, options) {
+function RoomManager(room, address, queue, options) {
   options = options || {};
   let cacheSize = options.msgCacheLimit || 100;
 
-  this._pinger = herokuPinger(url);
+  this._pinger = herokuPinger(HEROKU_URL);
   this._room = room;
   this._address = address;
   this._userStore = new UserManager(validator);
