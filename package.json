@@ -13,6 +13,7 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
+    "famous-quotes": "^1.0.3",
     "heroku-pinger": "^1.0.1",
     "invisible-recaptcha": "^1.0.7",
     "optional": "^0.1.4",

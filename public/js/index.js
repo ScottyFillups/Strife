@@ -1,10 +1,7 @@
-var socket = io('/lobby', {transports: ['websocket']});
 angular.module('landingPage', [])
   .controller('UrlGeneratorCtrl', ['$scope', '$window', '$http', function($scope, $window, $http) {
-    //ill make a factory later
     var quoteDom = document.getElementById('quote');
     var authorDom = document.getElementById('author');
-    var linkDom = document.getElementById('room-url');
 
     $scope.login = function(token) {
       $http({
@@ -22,9 +19,14 @@ angular.module('landingPage', [])
     };
     $window.login = $scope.login;
 
-    $scope.url = '';
-    socket.on('daily quote', function(data) {
-      angular.element(quoteDom).html(data.quote);
-      angular.element(authorDom).html('&mdash; ' + data.author);
+    $http({
+      method: 'GET',
+      url: '/randomquote',
+    }).then(function(res) {
+      console.log(res.data);
+      angular.element(quoteDom).html(res.data.quote);
+      angular.element(authorDom).html('&mdash; ' + res.data.author);
+    }, function(err) {
+      console.log(err);
     });
   }]);

@@ -16,19 +16,20 @@ let app = express();
 let server = http.Server(app);
 let io = require('socket.io')(server);
 let appManager = new (require('./utility/AppManager'))(io);
-let quoteMaker = new (require('./utility/QuoteMaker'))(QUOTE_KEY);
+let quoteMaker = require('famous-quotes')(QUOTE_KEY);
 
 let recaptchaRouter = recaptchaFactory(RECAPTCHA_KEY, recaptchaSuccess, recaptchaFail);
 let lobby = require('./routes/lobby');
 let room = require('./routes/room')(appManager);
 
-let lobbyNsp = io.of('/lobby');
+quoteMaker.getGenerator();
 
 io.set('transports', ['websocket']);
 app.use(express.static('public'));
 app.use(bodyParser.text());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/randomquote', quoteMaker.getRouter());
 app.use('/recaptcha', recaptchaRouter);
 app.use('/', lobby);
 app.use('/', room);
@@ -41,11 +42,6 @@ function recaptchaSuccess(req, res) {
 function recaptchaFail(req, res) {
   res.send('There\'s an error with the ReCaptcha, sorry :c');
 }
-
-lobbyNsp.on('connection', (socket) => {
-  console.log('somebody connected in the lobby');
-  socket.emit('daily quote', quoteMaker.getQuote());
-});
 
 server.listen(WEBSERVER_PORT, () => {
   console.log('listening on port ' + WEBSERVER_PORT);
