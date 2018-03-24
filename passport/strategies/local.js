@@ -1,11 +1,11 @@
 const User = require('../../db/models/user')
 const { Strategy } = require('passport-local')
 
-async function localHandler (email, password, done) {
+async function localHandler (username, password, done) {
   const message = 'Invalid credentials!'
 
   try {
-    const user = await User.findOne({ 'local.email': email })
+    const user = await User.findOne({ 'local.username': username })
 
     if (!user) {
       done(null, false, { message })
@@ -20,4 +20,4 @@ async function localHandler (email, password, done) {
   }
 }
 
-module.exports = new Strategy({ usernameField: 'email' }, localHandler)
+module.exports = new Strategy(localHandler)

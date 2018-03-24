@@ -19,16 +19,16 @@ router.post('/logout', (req, res) => {
 })
 
 router.post('/signup', async (req, res) => {
-  const { email, password } = req.body
+  const { username, password } = req.body
 
   try {
-    const user = await User.findOne({ 'local.email': email })
+    const user = await User.findOne({ 'local.username': username })
 
     if (user) {
-      res.json({ message: 'Sorry, this email address has already been registered' })
+      res.json({ message: 'Sorry, this username has already been registered' })
     } else {
       const newUser = new User({
-        'local.email': email,
+        'local.username': username,
         'local.password': password
       })
       const savedUser = await newUser.save()
