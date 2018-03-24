@@ -1,28 +1,46 @@
 {
-  "name": "strifejs",
+  "name": "strife",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "start http:localhost:8080 & nodemon server.js",
-    "start": "node server.js"
-  },
-  "keywords": [],
-  "author": "",
+  "main": "index.js",
+  "repository": "git@github.com:ScottyFillups/strife.git",
+  "author": "Philip Scott <pscott@zeptohost.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www",
+    "lint": "eslint .",
+    "test": "nyc mocha --reporter spec",
+    "build": "parcel build ./client/index.html -d ./client/build --public-url ./",
+    "precommit": "yarn lint && yarn test"
+  },
   "dependencies": {
-    "body-parser": "^1.17.2",
-    "express": "^4.15.4",
-    "famous-quotes": "^1.0.3",
-    "heroku-pinger": "^1.0.1",
-    "invisible-recaptcha": "^1.0.7",
-    "optional": "^0.1.4",
-    "randomcolor": "^0.5.3",
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "config": "^1.30.0",
+    "connect-mongo": "^2.0.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "redis": "^2.8.0",
-    "request": "^2.81.0",
-    "shortid": "^2.2.8",
-    "socket.io": "^2.0.3",
-    "unirest": "^0.5.1",
-    "validator": "^8.0.0"
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "husky": "^0.14.3",
+    "hyperapp": "^1.2.1",
+    "mocha": "^5.0.5",
+    "mongoose": "^5.0.11",
+    "nodemon": "^1.17.2",
+    "nyc": "^11.6.0",
+    "parcel-bundler": "^1.6.2",
+    "socket.io-client": "^2.0.4"
   }
 }

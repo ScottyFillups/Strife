@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const webPort = process.env.PORT || 8080
+const redisPort = process.env.REDIS_URL || 6379
+
+const http = require('http')
+const app = require('../app')
+const server = http.createServer(app)
+
+server.listen(webPort, () => {
+  console.log(`Server listening on port ${ webPort }!`)
+})

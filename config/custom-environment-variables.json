@@ -1,0 +1,4 @@
+{
+  "mongoUrl": "MONGO_URL",
+  "secret": "SECRET"
+}
